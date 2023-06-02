@@ -184,4 +184,44 @@ display(
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC # Explore the Data
+# MAGIC For our propensity scoring exercise, we will be examining individual households' propensity towards various product categories. Within this dataset, category-like information for products is conveyed in terms of 44 departments and 306 commodity assignments. If we examine department assignments, we see the vast majority of products are assigned to two general departments, i.e. Grocery and Drug GM, making department not terribly useful for our purposes:
+
+# COMMAND ----------
+
+# DBTITLE 1,Examine product Department Assignments
+# MAGIC %sql
+# MAGIC  
+# MAGIC SELECT 
+# MAGIC   a.department, 
+# MAGIC   COUNT(DISTINCT a.product_id) as products,
+# MAGIC   COUNT(*) as purchases
+# MAGIC FROM products a
+# MAGIC INNER JOIN transactions_adj b
+# MAGIC   ON a.product_id=b.product_id
+# MAGIC GROUP BY a.department
+# MAGIC ORDER BY products DESC
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC While much more granular, the 308 product commodities appear to have a much more even distribution of products, making this a much more viable candidate for our propensity scoring exercise:
+
+# COMMAND ----------
+
+# DBTITLE 1,Examine Product Commodity Assignments
+# MAGIC %sql
+# MAGIC SELECT 
+# MAGIC   a.commodity_desc, 
+# MAGIC   COUNT(DISTINCT a.product_id) as products,
+# MAGIC   COUNT(*) as purchases
+# MAGIC FROM products a
+# MAGIC INNER JOIN transactions_adj b
+# MAGIC   ON a.product_id=b.product_id
+# MAGIC GROUP BY a.commodity_desc
+# MAGIC ORDER BY products DESC
+
+# COMMAND ----------
+
 
